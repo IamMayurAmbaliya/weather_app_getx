@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weathery/controllers/main_controller.dart';
-import 'package:weathery/routes/app_routes.dart';
 
 class SplashScreenPage extends StatelessWidget {
   const SplashScreenPage({super.key});

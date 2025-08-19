@@ -1,212 +1,208 @@
 // To parse this JSON data, do
 //
-//     final weatherModel = weatherModelFromJson(jsonString);
+//     final currentWeatherModel = currentWeatherModelFromJson(jsonString);
 
 import 'dart:convert';
 
-WeatherModel weatherModelFromJson(String str) =>
-    WeatherModel.fromJson(json.decode(str));
+CurrentWeatherModel currentWeatherModelFromJson(String str) =>
+    CurrentWeatherModel.fromJson(json.decode(str));
 
-String weatherModelToJson(WeatherModel data) => json.encode(data.toJson());
+String currentWeatherModelToJson(CurrentWeatherModel data) =>
+    json.encode(data.toJson());
 
-class WeatherModel {
-  Location location;
-  Current current;
-
-  WeatherModel({required this.location, required this.current});
-
-  factory WeatherModel.fromJson(Map json) => WeatherModel(
-    location: Location.fromJson(json["location"]),
-    current: Current.fromJson(json["current"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "location": location.toJson(),
-    "current": current.toJson(),
-  };
-}
-
-class Current {
-  int lastUpdatedEpoch;
-  String lastUpdated;
-  double tempC;
-  int tempF;
-  int isDay;
-  Condition condition;
-  double windMph;
-  double windKph;
-  int windDegree;
-  String windDir;
-  int pressureMb;
-  double pressureIn;
-  int precipMm;
-  int precipIn;
-  int humidity;
-  int cloud;
-  double feelslikeC;
-  double feelslikeF;
-  double windchillC;
-  double windchillF;
-  double heatindexC;
-  double heatindexF;
-  double dewpointC;
-  double dewpointF;
-  int visKm;
-  int visMiles;
-  double uv;
-  int gustMph;
-  double gustKph;
-
-  Current({
-    required this.lastUpdatedEpoch,
-    required this.lastUpdated,
-    required this.tempC,
-    required this.tempF,
-    required this.isDay,
-    required this.condition,
-    required this.windMph,
-    required this.windKph,
-    required this.windDegree,
-    required this.windDir,
-    required this.pressureMb,
-    required this.pressureIn,
-    required this.precipMm,
-    required this.precipIn,
-    required this.humidity,
-    required this.cloud,
-    required this.feelslikeC,
-    required this.feelslikeF,
-    required this.windchillC,
-    required this.windchillF,
-    required this.heatindexC,
-    required this.heatindexF,
-    required this.dewpointC,
-    required this.dewpointF,
-    required this.visKm,
-    required this.visMiles,
-    required this.uv,
-    required this.gustMph,
-    required this.gustKph,
-  });
-
-  factory Current.fromJson(Map<String, dynamic> json) => Current(
-    lastUpdatedEpoch: json["last_updated_epoch"],
-    lastUpdated: json["last_updated"],
-    tempC: json["temp_c"]?.toDouble(),
-    tempF: json["temp_f"],
-    isDay: json["is_day"],
-    condition: Condition.fromJson(json["condition"]),
-    windMph: json["wind_mph"]?.toDouble(),
-    windKph: json["wind_kph"]?.toDouble(),
-    windDegree: json["wind_degree"],
-    windDir: json["wind_dir"],
-    pressureMb: json["pressure_mb"],
-    pressureIn: json["pressure_in"]?.toDouble(),
-    precipMm: json["precip_mm"],
-    precipIn: json["precip_in"],
-    humidity: json["humidity"],
-    cloud: json["cloud"],
-    feelslikeC: json["feelslike_c"]?.toDouble(),
-    feelslikeF: json["feelslike_f"]?.toDouble(),
-    windchillC: json["windchill_c"]?.toDouble(),
-    windchillF: json["windchill_f"]?.toDouble(),
-    heatindexC: json["heatindex_c"]?.toDouble(),
-    heatindexF: json["heatindex_f"]?.toDouble(),
-    dewpointC: json["dewpoint_c"]?.toDouble(),
-    dewpointF: json["dewpoint_f"]?.toDouble(),
-    visKm: json["vis_km"],
-    visMiles: json["vis_miles"],
-    uv: json["uv"]?.toDouble(),
-    gustMph: json["gust_mph"],
-    gustKph: json["gust_kph"]?.toDouble(),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "last_updated_epoch": lastUpdatedEpoch,
-    "last_updated": lastUpdated,
-    "temp_c": tempC,
-    "temp_f": tempF,
-    "is_day": isDay,
-    "condition": condition.toJson(),
-    "wind_mph": windMph,
-    "wind_kph": windKph,
-    "wind_degree": windDegree,
-    "wind_dir": windDir,
-    "pressure_mb": pressureMb,
-    "pressure_in": pressureIn,
-    "precip_mm": precipMm,
-    "precip_in": precipIn,
-    "humidity": humidity,
-    "cloud": cloud,
-    "feelslike_c": feelslikeC,
-    "feelslike_f": feelslikeF,
-    "windchill_c": windchillC,
-    "windchill_f": windchillF,
-    "heatindex_c": heatindexC,
-    "heatindex_f": heatindexF,
-    "dewpoint_c": dewpointC,
-    "dewpoint_f": dewpointF,
-    "vis_km": visKm,
-    "vis_miles": visMiles,
-    "uv": uv,
-    "gust_mph": gustMph,
-    "gust_kph": gustKph,
-  };
-}
-
-class Condition {
-  String text;
-  String icon;
-  int code;
-
-  Condition({required this.text, required this.icon, required this.code});
-
-  factory Condition.fromJson(Map<String, dynamic> json) =>
-      Condition(text: json["text"], icon: json["icon"], code: json["code"]);
-
-  Map<String, dynamic> toJson() => {"text": text, "icon": icon, "code": code};
-}
-
-class Location {
+class CurrentWeatherModel {
+  Coord coord;
+  List<Weather> weather;
+  String base;
+  Main main;
+  int visibility;
+  Wind wind;
+  Clouds clouds;
+  int dt;
+  Sys sys;
+  int timezone;
+  int id;
   String name;
-  String region;
-  String country;
-  double lat;
-  double lon;
-  String tzId;
-  int localtimeEpoch;
-  String localtime;
+  int cod;
 
-  Location({
+  CurrentWeatherModel({
+    required this.coord,
+    required this.weather,
+    required this.base,
+    required this.main,
+    required this.visibility,
+    required this.wind,
+    required this.clouds,
+    required this.dt,
+    required this.sys,
+    required this.timezone,
+    required this.id,
     required this.name,
-    required this.region,
-    required this.country,
-    required this.lat,
-    required this.lon,
-    required this.tzId,
-    required this.localtimeEpoch,
-    required this.localtime,
+    required this.cod,
   });
 
-  factory Location.fromJson(Map<String, dynamic> json) => Location(
+  factory CurrentWeatherModel.fromJson(json) => CurrentWeatherModel(
+    coord: Coord.fromJson(json["coord"]),
+    weather: List<Weather>.from(
+      json["weather"].map((x) => Weather.fromJson(x)),
+    ),
+    base: json["base"],
+    main: Main.fromJson(json["main"]),
+    visibility: json["visibility"],
+    wind: Wind.fromJson(json["wind"]),
+    clouds: Clouds.fromJson(json["clouds"]),
+    dt: json["dt"],
+    sys: Sys.fromJson(json["sys"]),
+    timezone: json["timezone"],
+    id: json["id"],
     name: json["name"],
-    region: json["region"],
-    country: json["country"],
-    lat: json["lat"]?.toDouble(),
-    lon: json["lon"]?.toDouble(),
-    tzId: json["tz_id"],
-    localtimeEpoch: json["localtime_epoch"],
-    localtime: json["localtime"],
+    cod: json["cod"],
   );
 
   Map<String, dynamic> toJson() => {
+    "coord": coord.toJson(),
+    "weather": List<dynamic>.from(weather.map((x) => x.toJson())),
+    "base": base,
+    "main": main.toJson(),
+    "visibility": visibility,
+    "wind": wind.toJson(),
+    "clouds": clouds.toJson(),
+    "dt": dt,
+    "sys": sys.toJson(),
+    "timezone": timezone,
+    "id": id,
     "name": name,
-    "region": region,
-    "country": country,
-    "lat": lat,
-    "lon": lon,
-    "tz_id": tzId,
-    "localtime_epoch": localtimeEpoch,
-    "localtime": localtime,
+    "cod": cod,
   };
+}
+
+class Clouds {
+  int all;
+
+  Clouds({required this.all});
+
+  factory Clouds.fromJson(Map<String, dynamic> json) =>
+      Clouds(all: json["all"]);
+
+  Map<String, dynamic> toJson() => {"all": all};
+}
+
+class Coord {
+  double lon;
+  double lat;
+
+  Coord({required this.lon, required this.lat});
+
+  factory Coord.fromJson(Map<String, dynamic> json) =>
+      Coord(lon: json["lon"]?.toDouble(), lat: json["lat"]?.toDouble());
+
+  Map<String, dynamic> toJson() => {"lon": lon, "lat": lat};
+}
+
+class Main {
+  double temp;
+  double feelsLike;
+  double tempMin;
+  double tempMax;
+  int pressure;
+  int humidity;
+  int seaLevel;
+  int grndLevel;
+
+  Main({
+    required this.temp,
+    required this.feelsLike,
+    required this.tempMin,
+    required this.tempMax,
+    required this.pressure,
+    required this.humidity,
+    required this.seaLevel,
+    required this.grndLevel,
+  });
+
+  factory Main.fromJson(Map<String, dynamic> json) => Main(
+    temp: json["temp"]?.toDouble(),
+    feelsLike: json["feels_like"]?.toDouble(),
+    tempMin: json["temp_min"]?.toDouble(),
+    tempMax: json["temp_max"]?.toDouble(),
+    pressure: json["pressure"],
+    humidity: json["humidity"],
+    seaLevel: json["sea_level"],
+    grndLevel: json["grnd_level"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "temp": temp,
+    "feels_like": feelsLike,
+    "temp_min": tempMin,
+    "temp_max": tempMax,
+    "pressure": pressure,
+    "humidity": humidity,
+    "sea_level": seaLevel,
+    "grnd_level": grndLevel,
+  };
+}
+
+class Sys {
+  String country;
+  int sunrise;
+  int sunset;
+
+  Sys({required this.country, required this.sunrise, required this.sunset});
+
+  factory Sys.fromJson(Map<String, dynamic> json) => Sys(
+    country: json["country"],
+    sunrise: json["sunrise"],
+    sunset: json["sunset"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "country": country,
+    "sunrise": sunrise,
+    "sunset": sunset,
+  };
+}
+
+class Weather {
+  int id;
+  String main;
+  String description;
+  String icon;
+
+  Weather({
+    required this.id,
+    required this.main,
+    required this.description,
+    required this.icon,
+  });
+
+  factory Weather.fromJson(Map<String, dynamic> json) => Weather(
+    id: json["id"],
+    main: json["main"],
+    description: json["description"],
+    icon: json["icon"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "main": main,
+    "description": description,
+    "icon": icon,
+  };
+}
+
+class Wind {
+  double speed;
+  int deg;
+  double gust;
+
+  Wind({required this.speed, required this.deg, required this.gust});
+
+  factory Wind.fromJson(Map<String, dynamic> json) => Wind(
+    speed: json["speed"]?.toDouble(),
+    deg: json["deg"],
+    gust: json["gust"]?.toDouble(),
+  );
+
+  Map<String, dynamic> toJson() => {"speed": speed, "deg": deg, "gust": gust};
 }

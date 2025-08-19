@@ -9,7 +9,10 @@ class ApiHelper {
   ApiHelper._();
   static final ApiHelper instance = ApiHelper._();
 
-  Future<WeatherModel?> fetchData(double latitude, double longitude) async {
+  Future<CurrentWeatherModel?> fetchData(
+    // double latitude,
+    // double longitude,
+  ) async {
     String api =
         "https://api.openweathermap.org/data/2.5/weather?lat=${Global.latitude}&lon=${Global.longitude}&appid=${Global.apiId}";
 
@@ -17,9 +20,10 @@ class ApiHelper {
 
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);
-      WeatherModel weatherModel;
-      weatherModel = WeatherModel.fromJson(data);
-      return weatherModel;
+      print("DATA IS RECEIVED");
+      CurrentWeatherModel currentWeatherModel;
+      currentWeatherModel = CurrentWeatherModel.fromJson(data);
+      return currentWeatherModel;
     }
     return null;
   }
