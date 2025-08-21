@@ -6,7 +6,7 @@ import 'package:weathery/model/weather_model.dart';
 class MainController extends GetxController {
   @override
   void onInit() {
-    startSplashTimer();
+    // startSplashTimer();
     getWeatherData();
     super.onInit();
   }
@@ -27,10 +27,17 @@ class MainController extends GetxController {
 
   //3.Api Data.................................
   CurrentWeatherModel? currentWeatherData;
+  RxBool isLoading = true.obs;
   Future<void> getWeatherData() async {
-    currentWeatherData = await ApiHelper.instance.fetchData();
+    try {
+      // isLoading = true.obs;
+      currentWeatherData = await ApiHelper.instance.fetchData();
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      // isLoading = false.obs;
+    }
   }
-  //initialize in oninit method upper
 
-  RxBool isLoading = false.obs;
+  //initialize in oninit method upper
 }

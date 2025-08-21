@@ -12,7 +12,7 @@ class AppRoutes {
   static final AppRoutes instance = AppRoutes._();
 
   // Initial route
-  static String initial = "/splash";
+  static String initial = "/home";
 
   //Pages Name
   static String splash = "/splash";
@@ -21,7 +21,7 @@ class AppRoutes {
   static String favorite = "/favorite";
 
   List<GetPage> routes = [
-    GetPage(name: AppRoutes.initial, page: () => SplashScreenPage()),
+    GetPage(name: AppRoutes.splash, page: () => SplashScreenPage()),
     GetPage(name: AppRoutes.home, page: () => HomePage()),
     GetPage(name: AppRoutes.save, page: () => SavePage()),
     GetPage(name: AppRoutes.favorite, page: () => FavoritePage()),

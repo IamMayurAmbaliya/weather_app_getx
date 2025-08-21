@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:weathery/constants.dart';
 import 'package:weathery/controllers/main_controller.dart';
 import 'package:weathery/extensions.dart';
 import 'package:weathery/helpers/api_helper.dart';
@@ -10,8 +11,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime date = DateTime.now();
     MainController controller = Get.put(MainController());
+    TextEditingController latitudeController = TextEditingController();
+    TextEditingController longitudeController = TextEditingController();
+    GlobalKey<FormState> key = GlobalKey<FormState>();
 
     return Scaffold(
       // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -31,267 +34,80 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
-        padding: EdgeInsets.all(12),
-        child: FutureBuilder(
-          future: controller.getWeatherData(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              CurrentWeatherModel data = snapshot.data;
-              return SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      data.name.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: "poppins_bold",
-                        fontSize: 32,
-                        letterSpacing: 3,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: key,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: latitudeController,
+                onSaved: (value) {
+                  Global.latitude = value ?? Global.latitude;
+                },
+                decoration: InputDecoration(
+                  labelText: "Latitude",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(color: Colors.blue, width: 1.5),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                controller: longitudeController,
+                onSaved: (value) {
+                  Global.longitude = value ?? Global.longitude;
+                },
+                decoration: InputDecoration(
+                  labelText: "Longitude",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(color: Colors.blue, width: 1.5),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  key.currentState!.save();
+                  controller.getWeatherData();
+                },
+                child: Text("Submit"),
+              ),
+              SizedBox(height: 50),
+              controller.currentWeatherData == null
+                  ? Center(child: CircularProgressIndicator())
+                  : Container(
+                    width: double.infinity,
+                    color: Colors.black12,
+                    child: Column(
                       children: [
-                        Image.asset(
-                          "assets/weather/${data.weather[0].icon}.png",
-                          width: 80,
-                          height: 80,
-                        ),
-                        RichText(
-                          text: TextSpan(
+                        Container(
+                          color: Colors.red,
+                          padding: EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              TextSpan(
-                                text: "{${data.main.temp}${"°"}",
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 64,
-                                  fontFamily: "poppins",
-                                ),
+                              Text(controller.currentWeatherData!.name),
+                              Text(
+                                controller.currentWeatherData!.weather[0].main,
                               ),
-                              TextSpan(
-                                text: " ${data.weather[0].main}",
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  letterSpacing: 3,
-                                  fontSize: 14,
-                                  fontFamily: "poppins",
-                                ),
+                              Text(
+                                controller
+                                    .currentWeatherData!
+                                    .weather[0]
+                                    .description,
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton.icon(
-                          onPressed: null,
-                          icon: Icon(
-                            Icons.expand_less_rounded,
-                            color: Theme.of(context).iconTheme.color,
-                          ),
-                          label: Text(
-                            "${data.main.tempMax}${"°"}",
-                            style: TextStyle(
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                          ),
-                        ),
-                        TextButton.icon(
-                          onPressed: null,
-                          icon: Icon(
-                            Icons.expand_more_rounded,
-                            color: Theme.of(context).iconTheme.color,
-                          ),
-                          label: Text(
-                            "${data.main.tempMin}${"°"}",
-                            style: TextStyle(
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    10.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: List.generate(3, (index) {
-                        List<String> iconsList = [
-                          "assets/icons/clouds.png",
-                          "assets/icons/humidity.png",
-                          "assets/icons/windspeed.png",
-                        ];
-                        var values = [
-                          "${data.clouds.all}",
-                          "${data.main.humidity}",
-                          "${data.wind.speed} km/h",
-                        ];
-                        return Column(
-                          children: [
-                            Image.asset(iconsList[index], width: 60, height: 60)
-                                .box
-                                .gray200
-                                .padding(const EdgeInsets.all(8))
-                                .roundedSM
-                                .make(),
-                            10.height,
-                            Text(
-                              "$values[index]",
-                              style: TextStyle(color: Colors.grey.shade400),
-                            ),
-                          ],
-                        );
-                      }),
-                    ),
-                    10.height,
-                    const Divider(),
-                    10.height,
-                    FutureBuilder(
-                      future: controller.hourlyWeatherData,
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          HourlyWeatherData hourlyData = snapshot.data;
-
-                          return SizedBox(
-                            height: 160,
-                            child: ListView.builder(
-                              physics: const BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemCount:
-                                  hourlyData.list!.length > 6
-                                      ? 6
-                                      : hourlyData.list!.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                var time = DateFormat.jm().format(
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                    hourlyData.list![index].dt!.toInt() * 1000,
-                                  ),
-                                );
-
-                                return Container(
-                                  padding: const EdgeInsets.all(8),
-                                  margin: const EdgeInsets.only(right: 4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      time.text.make(),
-                                      Image.asset(
-                                        "assets/weather/${hourlyData.list![index].weather![0].icon}.png",
-                                        width: 80,
-                                      ),
-                                      10.height,
-                                      Text(
-                                        "${hourlyData.list![index].main!.temp}${"°"}",
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        }
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                    ),
-                    10.height,
-                    const Divider(),
-                    10.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Next 7 Days",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        TextButton(onPressed: () {}, child: Text("View All")),
-                      ],
-                    ),
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: 7,
-                      itemBuilder: (BuildContext context, int index) {
-                        var day = DateFormat(
-                          "EEEE",
-                        ).format(DateTime.now().add(Duration(days: index + 1)));
-                        return Card(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 12,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child:
-                                      day.text.semiBold
-                                          .color(Theme.of(context).primaryColor)
-                                          .make(),
-                                ),
-                                Expanded(
-                                  child: TextButton.icon(
-                                    onPressed: null,
-                                    icon: Image.asset(
-                                      "assets/weather/50n.png",
-                                      width: 40,
-                                    ),
-                                    label: Text(
-                                      "26${"°"}",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: "37${"°"} /",
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontFamily: "poppins",
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: " 26${"°"}",
-                                        style: TextStyle(
-                                          color:
-                                              Theme.of(context).iconTheme.color,
-                                          fontFamily: "poppins",
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
+                  ),
+            ],
+          ),
         ),
       ),
     );

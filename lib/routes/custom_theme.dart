@@ -11,7 +11,7 @@ class CustomThemes {
   static final ThemeData darkTheme = ThemeData(
     cardColor: Color(0xff57A0ED),
     fontFamily: "poppins",
-    scaffoldBackgroundColor: Color(0xff57A0ED),
+    scaffoldBackgroundColor: Colors.black,
     primaryColor: Colors.white,
     iconTheme: IconThemeData(color: Colors.white),
   );

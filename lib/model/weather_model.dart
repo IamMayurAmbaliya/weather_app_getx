@@ -41,23 +41,24 @@ class CurrentWeatherModel {
     required this.cod,
   });
 
-  factory CurrentWeatherModel.fromJson(json) => CurrentWeatherModel(
-    coord: Coord.fromJson(json["coord"]),
-    weather: List<Weather>.from(
-      json["weather"].map((x) => Weather.fromJson(x)),
-    ),
-    base: json["base"],
-    main: Main.fromJson(json["main"]),
-    visibility: json["visibility"],
-    wind: Wind.fromJson(json["wind"]),
-    clouds: Clouds.fromJson(json["clouds"]),
-    dt: json["dt"],
-    sys: Sys.fromJson(json["sys"]),
-    timezone: json["timezone"],
-    id: json["id"],
-    name: json["name"],
-    cod: json["cod"],
-  );
+  factory CurrentWeatherModel.fromJson(Map<String, dynamic> json) =>
+      CurrentWeatherModel(
+        coord: Coord.fromJson(json["coord"]),
+        weather: List<Weather>.from(
+          json["weather"].map((x) => Weather.fromJson(x)),
+        ),
+        base: json["base"],
+        main: Main.fromJson(json["main"]),
+        visibility: json["visibility"],
+        wind: Wind.fromJson(json["wind"]),
+        clouds: Clouds.fromJson(json["clouds"]),
+        dt: json["dt"],
+        sys: Sys.fromJson(json["sys"]),
+        timezone: json["timezone"],
+        id: json["id"],
+        name: json["name"],
+        cod: json["cod"],
+      );
 
   Map<String, dynamic> toJson() => {
     "coord": coord.toJson(),
