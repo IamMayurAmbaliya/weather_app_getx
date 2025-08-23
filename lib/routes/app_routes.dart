@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:weathery/pages/favorite_page.dart';
-import 'package:weathery/pages/home_page.dart';
+import 'package:weathery/pages/home_page/home_page.dart';
 import 'package:weathery/pages/save_page.dart';
 import 'package:weathery/pages/splash_screen.dart';
 
